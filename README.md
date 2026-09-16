@@ -2,7 +2,7 @@
 
 Módulo web para la captura, evaluación y control de asistencia a capacitaciones de Seguridad y Salud en el Trabajo (SST).
 
-## 🚀 Características
+## Características
 * **Formulario de Registro:** Captura de datos de colaboradores (nombre, cédula, fecha, cargo y observaciones).
 * **Evaluación de Capacitación:** Preguntas para validar la claridad de la información brindada.
 * **Historial de Registros:** Vista para consultar la información almacenada en base de datos.
@@ -12,7 +12,7 @@ Módulo web para la captura, evaluación y control de asistencia a capacitacione
 * **Base de Datos:** MySQL
 * **Servidor Web:** Administrado vía PM2 y servido bajo proxy inverso en Caddy.
 
-## 📂 Estructura
+## Estructura
 ```text
 formularios-sst/
 ├── backend/
