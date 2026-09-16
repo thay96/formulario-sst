@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Capacitaciones SST</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="historial.css">
+</head>
+<body>
+    <div class="contenedor-historial">
+        <h1>Historial de Capacitaciones</h1>
+        <a href="index.html" class="volver">← Volver al formulario</a>
+
+        <table id="tablaHistorial">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cédula</th>
+                    <th>Fecha</th>
+                    <th>Cargo</th>
+                    <th>¿Clara?</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                <!-- Aquí se insertan las filas por JS -->
+            </tbody>
+        </table>
+
+        <p id="mensajeHistorial"></p>
+    </div>
+
+    <script src="historial.js"></script>
+</body>
+</html>

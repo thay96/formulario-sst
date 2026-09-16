@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Capacitación SST</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Registro de Capacitación SST</h1>
+
+        <form id="formularioSST">
+            <label for="nombre_completo">Nombre completo</label>
+            <input type="text" id="nombre_completo" name="nombre_completo" required>
+
+            <label for="cedula">Cédula</label>
+            <input type="text" id="cedula" name="cedula" required>
+
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" name="fecha" required>
+
+            <label for="cargo">Cargo</label>
+            <input type="text" id="cargo" name="cargo" required>
+
+            <label for="quedo_clara_la_informacion">¿Quedó clara la información?</label>
+            <select id="quedo_clara_la_informacion" name="quedo_clara_la_informacion" required>
+                <option value="">Seleccione...</option>
+                <option value="Si">Sí</option>
+                <option value="No">No</option>
+            </select>
+
+            <label for="observacion">Observación referente a la capacitación</label>
+            <textarea id="observacion" name="observacion" rows="4"></textarea>
+
+            <button type="submit">Enviar registro</button>
+        </form>
+        <a href="historial.html">Ver historial</a>
+
+        <p id="mensaje"></p>
+    </div>
+
+    <script src="formulario.js"></script>
+</body>
+</html>
