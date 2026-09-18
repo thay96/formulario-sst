@@ -3,15 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial de Capacitaciones SST</title>
+    <title>Historial - Capacitaciones SST</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="historial.css">
 </head>
 <body>
-    <div class="contenedor-historial">
-        <h1>Historial de Capacitaciones</h1>
-        <a href="index.html" class="volver">← Volver al formulario</a>
 
+    <!-- Pantalla de acceso -->
+    <div class="contenedor" id="pantallaLogin">
+        <h1>Historial SST</h1>
+        <p>Ingresa la clave de acceso para ver los registros.</p>
+
+        <label for="claveAcceso">Clave de acceso</label>
+        <input type="password" id="claveAcceso" placeholder="Ingresa la clave">
+
+        <button type="button" id="btnEntrar">Entrar</button>
+        <p id="errorLogin" style="color:red; display:none;">❌ Clave incorrecta</p>
+
+        <a href="index.html" class="volver-link">← Volver al formulario</a>
+    </div>
+
+    <!-- Contenido del historial (oculto hasta validar la clave) -->
+    <div class="contenedor" id="pantallaHistorial" style="display:none;">
+        <h1>Historial de Capacitaciones</h1>
+        <a href="index.html" class="volver-link">← Volver al formulario</a>
+        <input type="text" id="buscador" placeholder="🔍 Buscar por nombre o cédula...">
         <table id="tablaHistorial">
             <thead>
                 <tr>
@@ -21,14 +37,17 @@
                     <th>Cargo</th>
                     <th>¿Clara?</th>
                     <th>Observación</th>
+                    <th>Foto</th>
                 </tr>
             </thead>
-            <tbody id="cuerpoTabla">
-                <!-- Aquí se insertan las filas por JS -->
-            </tbody>
+            <tbody id="cuerpoTabla"></tbody>
         </table>
+    </div>
 
-        <p id="mensajeHistorial"></p>
+    <!-- Modal para agrandar la foto -->
+    <div id="modalFoto" class="modal" style="display:none;">
+        <span id="cerrarModal">&times;</span>
+        <img id="imagenModal">
     </div>
 
     <script src="historial.js"></script>

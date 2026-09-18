@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Capacitación SST</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="contenedor">
         <h1>Registro de Capacitación SST</h1>
@@ -32,6 +34,19 @@
 
             <label for="observacion">Observación referente a la capacitación</label>
             <textarea id="observacion" name="observacion" rows="4"></textarea>
+            <label>Foto de confirmación *</label>
+            <div id="camaraContainer">
+                <video id="video" autoplay playsinline
+                    style="width:100%; max-width:400px; border-radius:8px; display:block;"></video>
+                <canvas id="canvas" style="display:none;"></canvas>
+                <img id="preview" style="width:100%; max-width:400px; border-radius:8px; display:none;">
+                <div style="margin-top:8px; display:flex; gap:8px;">
+                    <button type="button" id="btnCapturar">📷 Tomar foto</button>
+                    <button type="button" id="btnRepetir" style="display:none;">🔄 Repetir</button>
+                </div>
+                <small id="fotoError" style="color:red; display:none;">Debes tomar una foto para poder enviar el
+                    registro.</small>
+            </div>
 
             <button type="submit">Enviar registro</button>
         </form>
@@ -42,4 +57,5 @@
 
     <script src="formulario.js"></script>
 </body>
+
 </html>

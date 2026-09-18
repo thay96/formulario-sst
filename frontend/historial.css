@@ -32,3 +32,104 @@ th {
     background-color: #f4f6f8;
     color: #374151;
 }
+
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+}
+
+#cerrarModal {
+    position: absolute;
+    top: 20px; right: 30px;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+
+#pantallaHistorial {
+    max-width: 900px;
+}
+
+#tablaHistorial {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+#tablaHistorial thead {
+    background-color: #f3f4f6;
+}
+
+#tablaHistorial th {
+    text-align: left;
+    padding: 12px;
+    font-size: 14px;
+    color: #374151;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+#tablaHistorial td {
+    padding: 12px;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #111827;
+}
+
+#tablaHistorial tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.miniatura {
+    width: 60px !important;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    transition: transform 0.15s ease;
+}
+
+.miniatura:hover {
+    transform: scale(1.1);
+}
+
+#pantallaHistorial {
+    overflow-x: auto;
+}
+
+.volver-link {
+    display: block;
+    margin: 16px 0;
+    color: #4f46e5;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.volver-link:hover {
+    text-decoration: underline;
+}
+
+#buscador {
+    width: 100%;
+    padding: 10px 14px;
+    margin: 12px 0;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#buscador:focus {
+    outline: none;
+    border-color: #4f46e5;
+}
