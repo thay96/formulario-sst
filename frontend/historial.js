@@ -78,7 +78,7 @@ function renderizarTabla(registros) {
             <td>${r.cargo}</td>
             <td>${r.quedo_clara_la_informacion}</td>
             <td>${r.observacion || '-'}</td>
-            <td>${r.foto ? `<img src="/uploads/fotos/${r.foto}" class="miniatura" style="width:50px; cursor:pointer;">` : '-'}</td>
+        <td>${r.foto ? `<img src="data:image/jpeg;base64,${r.foto}" class="miniatura" style="width:50px; cursor:pointer;">` : '-'}</td>
         `;
         cuerpoTabla.appendChild(fila);
     });

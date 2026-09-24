@@ -16,7 +16,7 @@ const crearRegistro = async (req, res) => {
             return res.status(400).json({ error: 'La foto de confirmación es obligatoria' });
         }
 
-        const foto = req.file.filename;
+        const foto = req.file.buffer.toString('base64');
 
         const [result] = await db.query(
             `INSERT INTO registros_capacitacion 
