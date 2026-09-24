@@ -107,3 +107,12 @@ buscador.addEventListener('input', () => {
 
     renderizarTabla(filtrados);
 });
+
+const volverDesdeHistorial = document.getElementById('volverDesdeHistorial');
+if (volverDesdeHistorial) {
+    volverDesdeHistorial.addEventListener('click', (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem('sstAuth');
+        window.location.href = 'index.html';
+    });
+}
