@@ -12,6 +12,8 @@ let todosLosRegistros = [];
 const modalFoto = document.getElementById('modalFoto');
 const imagenModal = document.getElementById('imagenModal');
 const cerrarModal = document.getElementById('cerrarModal');
+const selectorCapacitacion = document.getElementById('selectorCapacitacion');
+const btnDescargarExcel = document.getElementById('btnDescargarExcel');
 
 // Al cargar la página, revisa si ya había una sesión guardada en este navegador
 window.addEventListener('DOMContentLoaded', () => {
@@ -27,14 +29,13 @@ btnEntrar.addEventListener('click', () => {
     if (!clave) {
         errorLogin.textContent = '❌ Debes ingresar la clave';
         errorLogin.style.display = 'block';
-        return; // no manda la petición si está vacío
+        return;
     }
 
     const credenciales = btoa(`sst:${clave}`);
     cargarHistorial(credenciales);
 });
 
-// Permitir dar Enter en vez de clic
 claveAcceso.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') btnEntrar.click();
 });
@@ -46,13 +47,14 @@ async function cargarHistorial(credenciales) {
         });
 
         if (respuesta.status === 401) {
+            errorLogin.textContent = '❌ Clave incorrecta';
             errorLogin.style.display = 'block';
             sessionStorage.removeItem('sstAuth');
             return;
         }
 
         const registros = await respuesta.json();
-        todosLosRegistros = registros; // ← AGREGA ESTA LÍNEA
+        todosLosRegistros = registros;
 
         sessionStorage.setItem('sstAuth', credenciales);
 
@@ -60,6 +62,7 @@ async function cargarHistorial(credenciales) {
         pantallaHistorial.style.display = 'block';
 
         renderizarTabla(registros);
+        cargarCapacitaciones(credenciales);
     } catch (error) {
         console.error(error);
         errorLogin.textContent = '❌ No se pudo conectar con el servidor';
@@ -67,23 +70,63 @@ async function cargarHistorial(credenciales) {
     }
 }
 
+async function cargarCapacitaciones(credenciales) {
+    try {
+        const resp = await fetch('/api/capacitaciones', {
+            headers: { 'Authorization': `Basic ${credenciales}` }
+        });
+        const capacitaciones = await resp.json();
+
+        selectorCapacitacion.innerHTML = '<option value="">Todas las capacitaciones</option>' +
+            capacitaciones.map(c => `<option value="${c.id}">${c.nombre} (${new Date(c.fecha).toLocaleDateString('es-CO', { timeZone: 'UTC' })})</option>`).join('');
+    } catch (error) {
+        console.error('Error al cargar capacitaciones:', error);
+    }
+}
+
+selectorCapacitacion.addEventListener('change', async () => {
+    const credenciales = sessionStorage.getItem('sstAuth');
+    const capId = selectorCapacitacion.value;
+    const url = capId ? `/api/registros?capacitacion_id=${capId}` : '/api/registros';
+
+    const resp = await fetch(url, { headers: { 'Authorization': `Basic ${credenciales}` } });
+    const registros = await resp.json();
+    todosLosRegistros = registros;
+    renderizarTabla(registros);
+});
+
+btnDescargarExcel.addEventListener('click', async () => {
+    const credenciales = sessionStorage.getItem('sstAuth');
+    const capId = selectorCapacitacion.value;
+    const url = capId ? `/api/registros/excel?capacitacion_id=${capId}` : '/api/registros/excel';
+
+    const resp = await fetch(url, { headers: { 'Authorization': `Basic ${credenciales}` } });
+    const blob = await resp.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'registros.xlsx';
+    link.click();
+});
+
 function renderizarTabla(registros) {
     cuerpoTabla.innerHTML = '';
     registros.forEach(r => {
         const fila = document.createElement('tr');
+        const respuestasTexto = (r.respuestas || [])
+            .map(resp => `<strong>${resp.texto_pregunta}:</strong> ${resp.respuesta}`)
+            .join('<br>');
+
         fila.innerHTML = `
             <td>${r.nombre_completo}</td>
             <td>${r.cedula}</td>
             <td>${new Date(r.fecha).toLocaleDateString('es-CO', { timeZone: 'UTC' })}</td>
             <td>${r.cargo}</td>
-            <td>${r.quedo_clara_la_informacion}</td>
-            <td>${r.observacion || '-'}</td>
-        <td>${r.foto ? `<img src="data:image/jpeg;base64,${r.foto}" class="miniatura" style="width:50px; cursor:pointer;">` : '-'}</td>
+            <td>${respuestasTexto || '-'}</td>
+            <td>${r.foto ? `<img src="data:image/jpeg;base64,${r.foto}" class="miniatura" style="width:50px; cursor:pointer;">` : '-'}</td>
         `;
         cuerpoTabla.appendChild(fila);
     });
 
-    // Click en cada miniatura para agrandarla
     document.querySelectorAll('.miniatura').forEach(img => {
         img.addEventListener('click', () => {
             imagenModal.src = img.src;
@@ -95,7 +138,6 @@ function renderizarTabla(registros) {
 cerrarModal.addEventListener('click', () => {
     modalFoto.style.display = 'none';
 });
-
 
 buscador.addEventListener('input', () => {
     const texto = buscador.value.toLowerCase().trim();

@@ -25,15 +25,9 @@
             <label for="cargo">Cargo</label>
             <input type="text" id="cargo" name="cargo" required>
 
-            <label for="quedo_clara_la_informacion">¿Quedó clara la información?</label>
-            <select id="quedo_clara_la_informacion" name="quedo_clara_la_informacion" required>
-                <option value="">Seleccione...</option>
-                <option value="Si">Sí</option>
-                <option value="No">No</option>
-            </select>
+            <div id="mensajeCapacitacion"></div>
+            <div id="preguntasDinamicas"></div>
 
-            <label for="observacion">Observación referente a la capacitación</label>
-            <textarea id="observacion" name="observacion" rows="4"></textarea>
             <label>Foto de confirmación *</label>
             <div id="camaraContainer">
                 <video id="video" autoplay playsinline
@@ -42,6 +36,7 @@
                 <img id="preview" style="width:100%; max-width:400px; border-radius:8px; display:none;">
                 <div style="margin-top:8px; display:flex; gap:8px;">
                     <button type="button" id="btnCapturar">📷 Tomar foto</button>
+                    <button type="button" id="btnVoltear">📷 Voltear cámara</button>
                     <button type="button" id="btnRepetir" style="display:none;">🔄 Repetir</button>
                 </div>
                 <small id="fotoError" style="color:red; display:none;">Debes tomar una foto para poder enviar el
@@ -50,7 +45,7 @@
 
             <button type="submit">Enviar registro</button>
         </form>
-        <a href="historial.html">Ver historial</a>
+        <a href="historial.html" style="display:block; margin-top:30px;">Ver historial</a> <a href="admin.html" style="display:block; margin-top:8px;">➕ Crear capacitación</a>
 
         <p id="mensaje"></p>
     </div>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Capacitación - SST</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="historial.css">
+</head>
+<body>
+
+    <div class="contenedor" id="pantallaLogin">
+        <h1>Panel SST</h1>
+        <p>Ingresa la clave de acceso.</p>
+        <label for="claveAcceso">Clave de acceso</label>
+        <input type="password" id="claveAcceso" placeholder="Ingresa la clave">
+        <button type="button" id="btnEntrar">Entrar</button>
+        <p id="errorLogin" style="color:red; display:none;"></p>
+        <a href="index.html" class="volver-link">← Volver al formulario</a>
+    </div>
+
+    <div class="contenedor" id="pantallaAdmin" style="display:none;">
+        <h1>Crear nueva capacitación</h1>
+        <a href="#" id="volverDesdeAdmin" class="volver-link">← Volver al formulario</a>
+
+        <label for="nombreCap">Nombre de la capacitación</label>
+        <input type="text" id="nombreCap" placeholder="Ej: Trabajo en alturas">
+
+        <label for="fechaCap">Fecha</label>
+        <input type="date" id="fechaCap">
+
+        <h3>Preguntas</h3>
+        <div id="listaPreguntas"></div>
+        <button type="button" id="btnAgregarPregunta">➕ Agregar pregunta</button>
+
+        <hr>
+        <button type="button" id="btnGuardarCap">Guardar capacitación</button>
+        <p id="mensajeAdmin"></p>
+
+        <div id="resultadoLink" style="display:none; margin-top:16px;">
+            <p>✅ Capacitación creada. Comparte este link con los empleados:</p>
+            <input type="text" id="linkGenerado" readonly style="width:100%;">
+            <button type="button" id="btnCopiarLink">Copiar link</button>
+        </div>
+    </div>
+
+</body>
+<script src="admin.js"></script>
+</html>

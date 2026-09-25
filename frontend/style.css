@@ -86,3 +86,21 @@ button:hover {
     margin-top: 16px;
     font-weight: 600;
 }
+
+#preguntasDinamicas label {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+#preguntasDinamicas input,
+#preguntasDinamicas select {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}

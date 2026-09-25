@@ -133,3 +133,20 @@ th {
     outline: none;
     border-color: #4f46e5;
 }
+
+#pantallaAdmin label {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+#pantallaAdmin input,
+#pantallaAdmin select {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-sizing: border-box;
+}

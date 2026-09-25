@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="historial.css">
 </head>
+
 <body>
 
     <!-- Pantalla de acceso -->
@@ -27,7 +29,11 @@
     <div class="contenedor" id="pantallaHistorial" style="display:none;">
         <h1>Historial de Capacitaciones</h1>
         <a href="#" id="volverDesdeHistorial" class="volver-link">← Volver al formulario</a>
-        <input type="text" id="buscador" placeholder="🔍 Buscar por nombre o cédula...">
+        <select id="selectorCapacitacion">
+            <option value="">Todas las capacitaciones</option>
+        </select>
+        <button type="button" id="btnDescargarExcel">Descargar Excel</button>
+        <input type="text" id="buscador" placeholder="Buscar por nombre o cédula...">
         <table id="tablaHistorial">
             <thead>
                 <tr>
@@ -35,8 +41,7 @@
                     <th>Cédula</th>
                     <th>Fecha</th>
                     <th>Cargo</th>
-                    <th>¿Clara?</th>
-                    <th>Observación</th>
+                    <th>Respuestas</th>
                     <th>Foto</th>
                 </tr>
             </thead>
@@ -52,4 +57,5 @@
 
     <script src="historial.js"></script>
 </body>
+
 </html>
