@@ -1,4 +1,5 @@
 // backend/rutas.js
+const db = require('./config');
 const express = require('express');
 const router = express.Router();
 const { crearRegistro, obtenerRegistros, crearCapacitacion, obtenerCapacitaciones, obtenerPreguntasCapacitacion, exportarExcel } = require('./controllers');
@@ -19,5 +20,15 @@ router.get('/capacitaciones', authHistorial, obtenerCapacitaciones);
 
 // Obtener preguntas de una capacitación -> pública, la necesita el formulario para cualquier empleado
 router.get('/capacitaciones/:id/preguntas', obtenerPreguntasCapacitacion);
+
+
+router.get('/health', async (req, res) => {
+    try {
+        await db.query('SELECT 1');
+        res.json({ ok: true });
+    } catch (e) {
+        res.status(500).json({ ok: false });
+    }
+});
 
 module.exports = router;
