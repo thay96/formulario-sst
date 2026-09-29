@@ -159,7 +159,7 @@ formulario.addEventListener('submit', async (e) => {
             btnCapturar.style.display = 'inline-block';
             btnRepetir.style.display = 'none';
         } else {
-            mensaje.textContent = `❌ Error: ${resultado.error}`;
+            mensaje.textContent = `Error: ${resultado.error}`;
             mensaje.style.color = 'red';
         }
     } catch (error) {
@@ -167,4 +167,4 @@ formulario.addEventListener('submit', async (e) => {
         mensaje.style.color = 'red';
         console.error(error);
     }
-});
+})

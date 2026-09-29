@@ -9,6 +9,17 @@ const crearRegistro = async (req, res) => {
         if (!nombre_completo || !cedula || !fecha || !cargo || !capacitacion_id) {
             return res.status(400).json({ error: 'Faltan campos obligatorios' });
         }
+        
+        // Verificar que esa cédula no se haya registrado ya en esta misma capacitación
+        const [existente] = await db.query(
+            'SELECT id FROM registros_capacitacion WHERE cedula = ? AND capacitacion_id = ?',
+            [cedula, capacitacion_id]
+        );
+
+        if (existente.length > 0) {
+            return res.status(400).json({ error: 'Esta cédula ya está registrada en esta capacitación' });
+        }
+
 
         if (!req.file) {
             return res.status(400).json({ error: 'La foto de confirmación es obligatoria' });
