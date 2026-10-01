@@ -1,14 +1,233 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Capacitación - SST</title>
+    <title>Panel SST</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="historial.css">
+    <style>
+        /* Reemplaza el bloque <style> en admin.html con esto */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .tab-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            /* Estilo píldora */
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #374151;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .tab-btn.logout {
+            background: #fee2e2;
+            color: #dc2626;
+            margin-left: auto;
+        }
+
+        .tab-btn.logout:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Estilos para la lista de capacitaciones */
+        .capacitacion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .capacitacion-info {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .capacitacion-acciones {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+
+        .btn-accion {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            /* Misma altura para todos */
+            padding: 0 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            line-height: 1;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+
+        .btn-ver {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            gap: 4px;
+            /* Separación entre ícono y texto */
+        }
+
+        .btn-ver:hover {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .btn-eliminar-cap {
+            background: transparent;
+            color: #9ca3af;
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            /* Sin padding horizontal para que sea cuadrado */
+            width: 34px;
+            /* Mismo ancho que alto */
+        }
+
+        .btn-eliminar-cap:hover {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+
+        /* --- RESPONSIVE PARA CELULAR --- */
+        @media (max-width: 600px) {
+            .tabs {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .tab-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .tab-btn.logout {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            .capacitacion-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .capacitacion-acciones {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            /* Hacer que la tabla se pueda deslizar horizontalmente */
+            #tabRegistros {
+                overflow-x: auto;
+            }
+
+            #tablaHistorial {
+                min-width: 600px;
+                /* Fuerza el scroll horizontal en celular */
+            }
+        }
+
+        /* Estilo uniforme para los inputs y selects del panel */
+        #selectorCapacitacion {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 0.9rem;
+            color: #374151;
+            background-color: #fff;
+            height: 42px;
+            /* Misma altura que el botón de Excel */
+            box-sizing: border-box;
+            transition: border-color 0.15s;
+        }
+
+        #selectorCapacitacion:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        #btnDescargarExcel {
+            height: 42px;
+            /* Forzar misma altura que el select */
+            padding: 0 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        #btnDescargarExcel:hover {
+            background: #1d4ed8;
+        }
+
+        #selectorCapacitacion {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 36px;
+        }
+    </style>
 </head>
+
 <body>
 
+    <!-- Pantalla de Login -->
     <div class="contenedor" id="pantallaLogin">
         <h1>Panel SST</h1>
         <p>Ingresa la clave de acceso.</p>
@@ -19,31 +238,126 @@
         <a href="index.html" class="volver-link">← Volver al formulario</a>
     </div>
 
-    <div class="contenedor" id="pantallaAdmin" style="display:none;">
-        <h1>Crear nueva capacitación</h1>
-        <a href="#" id="volverDesdeAdmin" class="volver-link">← Volver al formulario</a>
+    <!-- Panel de Administración (Dashboard) -->
+    <div class="contenedor" id="pantallaAdmin" style="display:none; max-width: 1000px;">
 
-        <label for="nombreCap">Nombre de la capacitación</label>
-        <input type="text" id="nombreCap" placeholder="Ej: Trabajo en alturas">
+        <!-- Menú de Pestañas -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tabRegistros"> Ver Registros</button>
+            <button class="tab-btn" data-tab="tabCapacitaciones"> Mis Capacitaciones</button>
+            <button class="tab-btn" data-tab="tabCrear"> Crear Capacitación</button>
+            <button type="button" id="btnCerrarSesion" class="tab-btn logout"> Cerrar sesión</button>
+        </div>
 
-        <label for="fechaCap">Fecha</label>
-        <input type="date" id="fechaCap">
+        <!-- Pestaña 1: Ver Registros (Historial) -->
+        <div id="tabRegistros" class="tab-content active">
+            <h2>Historial de Registros</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <select id="selectorCapacitacion"
+                    style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #d1d5db;">
+                    <option value="">Todas las capacitaciones</option>
+                </select>
+                <button type="button" id="btnDescargarExcel"
+                    style="background:#2563eb; color:white; border:none; padding:10px 16px; border-radius:8px; cursor:pointer;">Descargar
+                    Excel</button>
+            </div>
+            <input type="text" id="buscador" placeholder="Buscar por nombre o cédula..."
+                style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #d1d5db; border-radius:8px; box-sizing:border-box;">
 
-        <h3>Preguntas</h3>
-        <div id="listaPreguntas"></div>
-        <button type="button" id="btnAgregarPregunta">➕ Agregar pregunta</button>
+            <div style="overflow-x: auto;">
+                <table id="tablaHistorial">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cédula</th>
+                            <th>Fecha</th>
+                            <th>Cargo</th>
+                            <th>Respuestas</th>
+                            <th>Foto</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla"></tbody>
+                </table>
+            </div>
+        </div>
 
-        <hr>
-        <button type="button" id="btnGuardarCap">Guardar capacitación</button>
-        <p id="mensajeAdmin"></p>
+        <!-- Pestaña 2: Mis Capacitaciones (Lista) -->
+        <div id="tabCapacitaciones" class="tab-content">
+            <h2>Capacitaciones Creadas</h2>
+            <div id="listaCapacitacionesAdmin">
+                <!-- Aquí JS pondrá la lista -->
+            </div>
+        </div>
 
-        <div id="resultadoLink" style="display:none; margin-top:16px;">
-            <p>✅ Capacitación creada. Comparte este link con los empleados:</p>
-            <input type="text" id="linkGenerado" readonly style="width:100%;">
-            <button type="button" id="btnCopiarLink">Copiar link</button>
+        <!-- Pestaña 3: Crear Capacitación -->
+        <div id="tabCrear" class="tab-content">
+            <h2>Crear nueva capacitación</h2>
+            <label for="nombreCap">Nombre de la capacitación</label>
+            <input type="text" id="nombreCap" placeholder="Ej: Trabajo en alturas">
+
+            <label for="fechaCap">Fecha</label>
+            <input type="date" id="fechaCap">
+
+            <h3>Preguntas</h3>
+            <div id="listaPreguntas"></div>
+            <button type="button" id="btnAgregarPregunta"
+                style="background:#f3f4f6; color:#374151; border:1px solid #d1d5db; padding:8px 12px; border-radius:6px; cursor:pointer; margin-bottom:15px;">
+                Agregar pregunta</button>
+
+            <hr>
+            <button type="button" id="btnGuardarCap"
+                style="background:#2563eb; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold;">Guardar
+                capacitación</button>
+            <p id="mensajeAdmin"></p>
+
+            <div id="resultadoLink"
+                style="display:none; margin-top:16px; background:#f0fdf4; padding:15px; border-radius:8px; border:1px solid #bbf7d0;">
+                <p style="color:#166534; font-weight:bold;"> Capacitación creada. Comparte este link:</p>
+                <input type="text" id="linkGenerado" readonly
+                    style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #d1d5db; border-radius:6px; box-sizing:border-box;">
+                <button type="button" id="btnCopiarLink"
+                    style="background:#16a34a; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Copiar
+                    link</button>
+                <button type="button" id="btnOtraCap"
+                    style="background:#e5e7eb; color:#374151; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; margin-left:10px;">Crear
+                    otra</button>
+            </div>
         </div>
     </div>
 
+    <!-- Modal Foto -->
+    <div id="modalFoto" class="modal" style="display:none;">
+        <span id="cerrarModal">&times;</span>
+        <img id="imagenModal">
+    </div>
+
+    <!-- Modal Eliminar -->
+    <div id="modalConfirmar" class="modal" style="display:none;">
+        <div class="modal-contenido-eliminar">
+            <h3>¿Estás seguro?</h3>
+            <p>¿Seguro que quieres eliminar este registro? Esta acción no se puede deshacer.</p>
+            <div class="modal-botones">
+                <button type="button" id="btnConfirmarSi" class="btn-peligro">Sí, eliminar</button>
+                <button type="button" id="btnConfirmarNo" class="btn-secundario">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal de aviso (no se puede eliminar) -->
+    <div id="modalAviso" class="modal" style="display:none;">
+        <div class="modal-contenido-eliminar">
+            <h3 style="color: #dc2626;">⚠️ No se puede eliminar</h3>
+            <p id="textoAviso">Mensaje de aviso</p>
+            <div class="modal-botones">
+                <button type="button" id="btnCerrarAviso" class="btn-peligro"
+                    style="background:#2563eb;">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
 </body>
-<script src="admin.js"></script>
+
 </html>

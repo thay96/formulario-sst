@@ -3,30 +3,34 @@ const db = require('./config');
 
 // Crear un nuevo registro de capacitación
 const crearRegistro = async (req, res) => {
-    try {
-        const { nombre_completo, cedula, fecha, cargo, capacitacion_id, respuestas } = req.body;
+    const { nombre_completo, cedula, fecha, cargo, capacitacion_id, respuestas } = req.body;
 
+    try {
+        // --- VALIDACIÓN DE CAMPOS OBLIGATORIOS ---
         if (!nombre_completo || !cedula || !fecha || !cargo || !capacitacion_id) {
             return res.status(400).json({ error: 'Faltan campos obligatorios' });
         }
-        
-        // Verificar que esa cédula no se haya registrado ya en esta misma capacitación
-        const [existente] = await db.query(
+
+        // --- VALIDACIÓN DE DUPLICADO ---
+        const [existe] = await db.query(
             'SELECT id FROM registros_capacitacion WHERE cedula = ? AND capacitacion_id = ?',
             [cedula, capacitacion_id]
         );
 
-        if (existente.length > 0) {
-            return res.status(400).json({ error: 'Esta cédula ya está registrada en esta capacitación' });
+        if (existe.length > 0) {
+            return res.status(409).json({
+                error: 'Esta cédula ya está registrada en esta capacitación. No puedes registrarte dos veces.'
+            });
         }
 
-
+        // --- VALIDACIÓN DE FOTO ---
         if (!req.file) {
             return res.status(400).json({ error: 'La foto de confirmación es obligatoria' });
         }
 
         const foto = req.file.buffer.toString('base64');
 
+        // --- INSERTAR REGISTRO ---
         const [result] = await db.query(
             `INSERT INTO registros_capacitacion 
             (nombre_completo, cedula, fecha, cargo, foto, capacitacion_id) 
@@ -36,6 +40,7 @@ const crearRegistro = async (req, res) => {
 
         const registroId = result.insertId;
 
+        // --- INSERTAR RESPUESTAS ---
         const listaRespuestas = respuestas ? JSON.parse(respuestas) : [];
         for (const r of listaRespuestas) {
             await db.query(
@@ -45,11 +50,14 @@ const crearRegistro = async (req, res) => {
         }
 
         res.status(201).json({ mensaje: 'Registro guardado con éxito', id: registroId });
+
     } catch (error) {
         console.error('Error al crear registro:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
+
 
 // Listar todos los registros (para que SST pueda consultarlos después)
 const obtenerRegistros = async (req, res) => {
@@ -196,4 +204,68 @@ const obtenerPreguntasCapacitacion = async (req, res) => {
     }
 };
 
-module.exports = { crearRegistro, obtenerRegistros, crearCapacitacion, obtenerCapacitaciones, obtenerPreguntasCapacitacion, exportarExcel };
+// Eliminar un registro específico (y sus respuestas asociadas)
+const eliminarRegistro = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Primero borramos las respuestas de ese registro (por la relación entre tablas)
+        await db.query('DELETE FROM respuestas WHERE registro_id = ?', [id]);
+
+        // Luego el registro en sí
+        const [result] = await db.query('DELETE FROM registros_capacitacion WHERE id = ?', [id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Registro no encontrado' });
+        }
+
+        res.json({ mensaje: 'Registro eliminado con éxito' });
+    } catch (error) {
+        console.error('Error al eliminar registro:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+// controllers.js
+async function eliminarCapacitacion(req, res) {
+    const { id } = req.params;
+    try {
+        // 1. Verificar si tiene registros asociados
+        const [registros] = await db.query(
+            'SELECT COUNT(*) as total FROM registros_capacitacion WHERE capacitacion_id = ?',
+            [id]
+        );
+
+        if (registros[0].total > 0) {
+            return res.status(409).json({
+                error: `No se puede eliminar esta capacitación porque tiene ${registros[0].total} registro(s) de empleados asociados.`
+            });
+        }
+
+        // 2. Si no tiene registros, eliminamos preguntas y capacitación
+        await db.query('DELETE FROM preguntas WHERE capacitacion_id = ?', [id]);
+        const [resultado] = await db.query('DELETE FROM capacitaciones WHERE id = ?', [id]);
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ error: 'Capacitación no encontrada' });
+        }
+
+        res.json({ ok: true, mensaje: 'Capacitación eliminada' });
+    } catch (error) {
+        console.error('Error al eliminar capacitación:', error);
+        res.status(500).json({ error: 'Error al eliminar la capacitación' });
+    }
+}
+
+module.exports = {
+    crearRegistro,
+    obtenerRegistros,
+    crearCapacitacion,
+    obtenerCapacitaciones,
+    obtenerPreguntasCapacitacion,
+    exportarExcel,
+    eliminarRegistro,
+    eliminarCapacitacion // <-- Agregar esta
+};
+
+

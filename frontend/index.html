@@ -14,10 +14,12 @@
 
         <form id="formularioSST">
             <label for="nombre_completo">Nombre completo</label>
-            <input type="text" id="nombre_completo" name="nombre_completo" required>
+            <input type="text" id="nombre_completo" name="nombre_completo" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                title="Solo se permiten letras y espacios" maxlength="80">
 
             <label for="cedula">Cédula</label>
-            <input type="text" id="cedula" name="cedula" required>
+            <input type="text" id="cedula" name="cedula" required pattern="[0-9]+" title="Solo se permiten números"
+                maxlength="15" inputmode="numeric">
 
             <label for="fecha">Fecha</label>
             <input type="date" id="fecha" name="fecha" required>
@@ -35,20 +37,45 @@
                 <canvas id="canvas" style="display:none;"></canvas>
                 <img id="preview" style="width:100%; max-width:400px; border-radius:8px; display:none;">
                 <div style="margin-top:8px; display:flex; gap:8px;">
-                    <button type="button" id="btnCapturar">📷 Tomar foto</button>
-                    <button type="button" id="btnVoltear">📷 Voltear cámara</button>
+                    <button type="button" id="btnCapturar">Tomar foto</button>
+                    <button type="button" id="btnVoltear">Voltear cámara</button>
                     <button type="button" id="btnRepetir" style="display:none;">🔄 Repetir</button>
                 </div>
                 <small id="fotoError" style="color:red; display:none;">Debes tomar una foto para poder enviar el
                     registro.</small>
             </div>
+            <!-- Checkbox de tratamiento de datos -->
+            <div class="checkbox-datos" id="contenedorDatos"
+                style="margin-top: 20px; padding: 12px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <label
+                    style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.85rem; font-weight: normal;">
+                    <input type="checkbox" id="aceptaDatos"
+                        style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;">
+                    <span>
+                        Autorizo el tratamiento de mis datos personales (nombre, cédula, foto y respuestas) conforme a
+                        la
+                        <a href="#" id="verPolitica" style="color: #2563eb; text-decoration: underline;">política de
+                            tratamiento de datos</a>
+                        de la empresa. *
+                    </span>
+                </label>
+                <small id="errorDatos" style="color: #dc2626; display: none; margin-top: 8px; font-weight: 600;">⚠️
+                    Debes aceptar el tratamiento de datos para continuar.</small>
+            </div>
 
             <button type="submit">Enviar registro</button>
         </form>
-        <a href="historial.html" style="display:block; margin-top:30px;">Ver historial</a> <a href="admin.html" style="display:block; margin-top:8px;">➕ Crear capacitación</a>
-
+        
         <p id="mensaje"></p>
+
+        <!-- Enlace discreto para administradores -->
+        <div style="margin-top: 40px; text-align: center; border-top: 1px solid #e5e7eb; padding-top: 15px;">
+            <a href="admin.html" style="color: #9ca3af; font-size: 12px; text-decoration: none;">🔒 Acceso SST</a>
+        </div>
+
     </div>
+
+
 
     <script src="formulario.js"></script>
 </body>
