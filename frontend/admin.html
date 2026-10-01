@@ -129,6 +129,21 @@
             /* Mismo ancho que alto */
         }
 
+        .btn-eliminar-cap {
+            background: transparent;
+            color: #9ca3af;
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin: 0;
+            vertical-align: middle;
+        }
+
         .btn-eliminar-cap:hover {
             background: #fee2e2;
             color: #dc2626;
@@ -159,8 +174,9 @@
             }
 
             .capacitacion-acciones {
-                width: 100%;
-                justify-content: flex-end;
+                display: flex;
+                gap: 8px;
+                align-items: center;
             }
 
             /* Hacer que la tabla se pueda deslizar horizontalmente */
