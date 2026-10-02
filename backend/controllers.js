@@ -95,7 +95,7 @@ const obtenerRegistros = async (req, res) => {
 // Descargar Excel de una capacitación
 const exportarExcel = async (req, res) => {
     try {
-        const XLSX = require('xlsx');
+        const ExcelJS = require('exceljs');
         const { capacitacion_id } = req.query;
 
         let sql = 'SELECT * FROM registros_capacitacion';
@@ -106,7 +106,13 @@ const exportarExcel = async (req, res) => {
         }
         const [registros] = await db.query(sql, params);
 
-        const data = [];
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('Registros');
+
+        // Primero averiguamos todas las preguntas posibles para armar las columnas dinámicas
+        const columnasPreguntas = new Set();
+        const registrosConRespuestas = [];
+
         for (const r of registros) {
             const [respuestas] = await db.query(
                 `SELECT p.texto_pregunta, resp.respuesta 
@@ -115,23 +121,55 @@ const exportarExcel = async (req, res) => {
                  WHERE resp.registro_id = ?`,
                 [r.id]
             );
-
-            const fila = {
-                Nombre: r.nombre_completo,
-                Cédula: r.cedula,
-                Fecha: r.fecha,
-                Cargo: r.cargo
-            };
-            respuestas.forEach(resp => {
-                fila[resp.texto_pregunta] = resp.respuesta;
-            });
-            data.push(fila);
+            respuestas.forEach(resp => columnasPreguntas.add(resp.texto_pregunta));
+            registrosConRespuestas.push({ ...r, respuestas });
         }
 
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Registros');
-        const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+        const listaPreguntas = Array.from(columnasPreguntas);
+
+        // Definir columnas: fijas + preguntas dinámicas + foto al final
+        sheet.columns = [
+            { header: 'Nombre', key: 'nombre', width: 25 },
+            { header: 'Cédula', key: 'cedula', width: 15 },
+            { header: 'Fecha', key: 'fecha', width: 14 },
+            { header: 'Cargo', key: 'cargo', width: 18 },
+            ...listaPreguntas.map(p => ({ header: p, key: p, width: 20 })),
+            { header: 'Foto', key: 'foto', width: 16 }
+        ];
+
+        let filaActual = 2; // la fila 1 es el encabezado
+
+        for (const r of registrosConRespuestas) {
+            const fila = {
+                nombre: r.nombre_completo,
+                cedula: r.cedula,
+                fecha: r.fecha,
+                cargo: r.cargo
+            };
+            r.respuestas.forEach(resp => {
+                fila[resp.texto_pregunta] = resp.respuesta;
+            });
+
+            sheet.addRow(fila);
+            sheet.getRow(filaActual).height = 70; // más alto para que quepa la foto
+
+            if (r.foto) {
+                const imageId = workbook.addImage({
+                    base64: `data:image/jpeg;base64,${r.foto}`,
+                    extension: 'jpeg'
+                });
+
+                const colIndex = sheet.columns.length - 1; // última columna (Foto)
+                sheet.addImage(imageId, {
+                    tl: { col: colIndex, row: filaActual - 1 },
+                    ext: { width: 80, height: 80 }
+                });
+            }
+
+            filaActual++;
+        }
+
+        const buffer = await workbook.xlsx.writeBuffer();
 
         res.setHeader('Content-Disposition', 'attachment; filename=registros.xlsx');
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

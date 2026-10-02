@@ -203,6 +203,8 @@
             /* Misma altura que el botón de Excel */
             box-sizing: border-box;
             transition: border-color 0.15s;
+            box-sizing: border-box;
+            margin: 0;
         }
 
         #selectorCapacitacion:focus {
@@ -212,7 +214,6 @@
 
         #btnDescargarExcel {
             height: 42px;
-            /* Forzar misma altura que el select */
             padding: 0 20px;
             background: #2563eb;
             color: white;
@@ -223,6 +224,10 @@
             cursor: pointer;
             transition: background 0.2s;
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
 
         #btnDescargarExcel:hover {
@@ -237,6 +242,41 @@
             background-position: right 12px center;
             background-size: 16px;
             padding-right: 36px;
+        }
+
+        .fila-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: stretch;
+        }
+
+        .fila-selector select,
+        .fila-selector button {
+            height: 44px;
+            box-sizing: border-box;
+            font-size: 0.9rem;
+            font-family: inherit;
+            line-height: normal;
+            margin: 0;
+            border-radius: 8px;
+            padding: 0 14px;
+        }
+
+        .fila-selector select {
+            flex: 1;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            background-color: #fff;
+        }
+
+        .fila-selector button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -268,14 +308,11 @@
         <!-- Pestaña 1: Ver Registros (Historial) -->
         <div id="tabRegistros" class="tab-content active">
             <h2>Historial de Registros</h2>
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <select id="selectorCapacitacion"
-                    style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #d1d5db;">
+            <div class="fila-selector">
+                <select id="selectorCapacitacion">
                     <option value="">Todas las capacitaciones</option>
                 </select>
-                <button type="button" id="btnDescargarExcel"
-                    style="background:#2563eb; color:white; border:none; padding:10px 16px; border-radius:8px; cursor:pointer;">Descargar
-                    Excel</button>
+                <button type="button" id="btnDescargarExcel">Descargar Excel</button>
             </div>
             <input type="text" id="buscador" placeholder="Buscar por nombre o cédula..."
                 style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #d1d5db; border-radius:8px; box-sizing:border-box;">
