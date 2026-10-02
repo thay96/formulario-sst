@@ -246,6 +246,31 @@ document.getElementById('selectorCapacitacion').addEventListener('change', async
     renderizarTabla(registros);
 });
 
+// --- BUSCADOR por nombre o cédula ---
+document.getElementById('buscador').addEventListener('input', () => {
+    const texto = document.getElementById('buscador').value.toLowerCase().trim();
+
+    const filtrados = todosLosRegistros.filter(r =>
+        r.nombre_completo.toLowerCase().includes(texto) ||
+        r.cedula.toLowerCase().includes(texto)
+    );
+
+    renderizarTabla(filtrados);
+});
+
+// --- DESCARGAR EXCEL ---
+document.getElementById('btnDescargarExcel').addEventListener('click', async () => {
+    const capId = document.getElementById('selectorCapacitacion').value;
+    const url = capId ? `/api/registros/excel?capacitacion_id=${capId}` : '/api/registros/excel';
+
+    const resp = await fetch(url, { headers: { 'Authorization': `Basic ${credencialesGuardadas}` } });
+    const blob = await resp.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'registros.xlsx';
+    link.click();
+});
+
 // --- CREAR CAPACITACIÓN ---
 const listaPreguntas = document.getElementById('listaPreguntas');
 document.getElementById('btnAgregarPregunta').addEventListener('click', agregarPregunta);
